@@ -18,21 +18,21 @@ Steps to Install and Configure HashiCorp Nomad in a Production Environment
 	•	On Each Node (Servers and Clients):
 	1	Download Nomad:
 	▪	Visit the HashiCorp Nomad downloads page.
-	▪	For the latest version (e.g., 1.9.2 as of July 2025), use: wget https://releases.hashicorp.com/nomad/1.9.2/nomad_1.9.2_linux_amd64.zip
+	▪	For the latest version (e.g., 1.9.2 as of July 2025), use:wget https://releases.hashicorp.com/nomad/1.9.2/nomad_1.9.2_linux_amd64.zip
 	▪	
-	2	Extract and Install: unzip nomad_1.9.2_linux_amd64.zip
+	2	Extract and Install:unzip nomad_1.9.2_linux_amd64.zip
 	3	sudo mv nomad /usr/local/bin/
 	4	
-	5	Verify Installation: nomad version
-	6	 Ensure the output shows the installed version (e.g., Nomad v1.9.2).
-	7	Create Nomad User (for security): sudo useradd --system --home /etc/nomad.d --shell /bin/false nomad
+	5	Verify Installation:nomad version
+	6	Ensure the output shows the installed version (e.g., Nomad v1.9.2).
+	7	Create Nomad User (for security):sudo useradd --system --home /etc/nomad.d --shell /bin/false nomad
 	8	
-	9	Set Up Directories: sudo mkdir -p /etc/nomad.d /var/lib/nomad
+	9	Set Up Directories:sudo mkdir -p /etc/nomad.d /var/lib/nomad
 	10	sudo chown nomad:nomad /etc/nomad.d /var/lib/nomad
 	11	
 3. Configure Nomad Servers
 	•	Create Server Configuration:
-	◦	On each server node, create /etc/nomad.d/nomad.hcl: datacenter = "dc1"
+	◦	On each server node, create /etc/nomad.d/nomad.hcl:datacenter = "dc1"
 	◦	data_dir   = "/var/lib/nomad"
 	◦	
 	◦	server {
@@ -66,7 +66,7 @@ Steps to Install and Configure HashiCorp Nomad in a Production Environment
 	◦	Ensure servers can communicate over ports 4647 (RPC) and 4648 (Serf).
 4. Configure Nomad Clients
 	•	Create Client Configuration:
-	◦	On each client node, create /etc/nomad.d/nomad.hcl: datacenter = "dc1"
+	◦	On each client node, create /etc/nomad.d/nomad.hcl:datacenter = "dc1"
 	◦	data_dir   = "/var/lib/nomad"
 	◦	
 	◦	client {
@@ -94,7 +94,7 @@ Steps to Install and Configure HashiCorp Nomad in a Production Environment
 	◦	Replace , , with the IPs of Nomad servers.
 	◦	Replace with the client node’s IP.
 	•	Install Dependencies:
-	◦	For Docker workloads, install Docker: sudo apt-get update
+	◦	For Docker workloads, install Docker:sudo apt-get update
 	◦	sudo apt-get install -y docker.io
 	◦	sudo systemctl enable docker
 	◦	sudo systemctl start docker
@@ -102,7 +102,7 @@ Steps to Install and Configure HashiCorp Nomad in a Production Environment
 	◦	For other drivers (e.g., Java, Podman), install them as needed.
 5. Set Up Systemd Service
 	•	Create Systemd Unit File:
-	◦	On all nodes, create /etc/systemd/system/nomad.service: [Unit]
+	◦	On all nodes, create /etc/systemd/system/nomad.service:[Unit]
 	◦	Description=Nomad
 	◦	Documentation=https://www.nomadproject.io/docs/
 	◦	Wants=network-online.target
@@ -120,17 +120,17 @@ Steps to Install and Configure HashiCorp Nomad in a Production Environment
 	◦	[Install]
 	◦	WantedBy=multi-user.target
 	◦	
-	•	Enable and Start Nomad: sudo systemctl enable nomad
+	•	Enable and Start Nomad:sudo systemctl enable nomad
 	•	sudo systemctl start nomad
 	•	
-	•	Verify Service: sudo systemctl status nomad
+	•	Verify Service:sudo systemctl status nomad
 	•	
 6. Secure the Cluster
 	•	Enable Gossip Encryption:
 	◦	Use the gossip key generated earlier in the encrypt field of the server and client configurations.
 	•	Enable TLS:
 	◦	Generate certificates for HTTP and RPC communication using a trusted CA or tools like cfssl.
-	◦	Update nomad.hcl with: tls {
+	◦	Update nomad.hcl with:tls {
 	◦	  http = true
 	◦	  rpc  = true
 	◦	  ca_file   = "/etc/nomad.d/nomad-ca.pem"
@@ -139,11 +139,11 @@ Steps to Install and Configure HashiCorp Nomad in a Production Environment
 	◦	}
 	◦	
 	•	ACLs (Access Control Lists):
-	◦	Enable ACLs for secure access: acl {
+	◦	Enable ACLs for secure access:acl {
 	◦	  enabled = true
 	◦	}
 	◦	
-	◦	Bootstrap ACLs on one server: nomad acl bootstrap
+	◦	Bootstrap ACLs on one server:nomad acl bootstrap
 	◦	
 	◦	Save the generated token and use it to create policies and tokens for users and services.
 7. Integrate with Consul (Optional but Recommended)
@@ -153,15 +153,15 @@ Steps to Install and Configure HashiCorp Nomad in a Production Environment
 	•	Register Services:
 	◦	Nomad automatically registers jobs with Consul if the consul block is configured.
 	◦	Ensure Consul’s HTTP API (8500) is accessible.
-	•	Verify Integration: consul members
+	•	Verify Integration:consul members
 	•	nomad node status
 	•	
 8. Test the Cluster
-	•	Verify Cluster Health: nomad server members
+	•	Verify Cluster Health:nomad server members
 	•	nomad node status
 	•	
 	•	Deploy a Test Job:
-	◦	Create a sample job file (example.nomad): job "example" {
+	◦	Create a sample job file (example.nomad):job "example" {
 	◦	  datacenters = ["dc1"]
 	◦	  type = "service"
 	◦	  group "cache" {
@@ -185,9 +185,9 @@ Steps to Install and Configure HashiCorp Nomad in a Production Environment
 	◦	  }
 	◦	}
 	◦	
-	◦	Run the job: nomad job run example.nomad
+	◦	Run the job:nomad job run example.nomad
 	◦	
-	◦	Check job status: nomad job status example
+	◦	Check job status:nomad job status example
 	◦	
 9. Monitoring and Logging
 	•	Enable Telemetry:
@@ -199,10 +199,10 @@ Steps to Install and Configure HashiCorp Nomad in a Production Environment
 	◦	Check Nomad’s UI at http://:4646.
 10. Backup and Maintenance
 	•	Backup Cluster State:
-	◦	Periodically snapshot the cluster: nomad operator snapshot save backup.snap
+	◦	Periodically snapshot the cluster:nomad operator snapshot save backup.snap
 	◦	
 	•	Update Nomad:
-	◦	Upgrade Nomad by replacing the binary and restarting the service: sudo systemctl stop nomad
+	◦	Upgrade Nomad by replacing the binary and restarting the service:sudo systemctl stop nomad
 	◦	wget 
 	◦	unzip nomad__linux_amd64.zip
 	◦	sudo mv nomad /usr/local/bin/
