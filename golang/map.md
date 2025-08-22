@@ -100,3 +100,109 @@ func main() {
 - **Performance**: Maps provide O(1) average-case complexity for lookups, insertions, and deletions.
 
 If you have a specific question about maps (e.g., sorting, concurrency, or use cases), let me know!
+
+## Sorting maps
+
+In Go, maps are inherently unordered, and there’s no built-in way to sort them directly because the order of keys is not guaranteed. However, you can sort the keys of a map and iterate over them in sorted order. Here’s how you can sort a Go map by keys or values:
+
+### Sorting by Keys
+To sort a map by keys, extract the keys into a slice, sort the slice, and then iterate over the sorted keys to access the map values.
+
+```go
+package main
+
+import (
+	"fmt"
+	"sort"
+)
+
+func main() {
+	// Example map
+	m := map[string]int{
+		"banana": 3,
+		"apple":  5,
+		"orange": 2,
+	}
+
+	// Extract keys into a slice
+	keys := make([]string, 0, len(m))
+	for key := range m {
+		keys = append(keys, key)
+	}
+
+	// Sort the keys
+	sort.Strings(keys)
+
+	// Iterate over sorted keys
+	for _, key := range keys {
+		fmt.Printf("%s: %d\n", key, m[key])
+	}
+}
+```
+
+**Output**:
+```
+apple: 5
+banana: 3
+orange: 2
+```
+
+### Sorting by Values
+To sort a map by values, create a slice of key-value pairs, sort the slice based on values, and then iterate over it. Since maps don’t maintain order, you typically work with a custom struct to hold key-value pairs.
+
+```go
+package main
+
+import (
+	"fmt"
+	"sort"
+)
+
+func main() {
+	// Example map
+	m := map[string]int{
+		"banana": 3,
+		"apple":  5,
+		"orange": 2,
+	}
+
+	// Define a struct to hold key-value pairs
+	type kv struct {
+		Key   string
+		Value int
+	}
+
+	// Create a slice of key-value pairs
+	var pairs []kv
+	for k, v := range m {
+		pairs = append(pairs, kv{k, v})
+	}
+
+	// Sort by value
+	sort.Slice(pairs, func(i, j int) bool {
+		return pairs[i].Value < pairs[j].Value // Ascending order
+		// Use > for descending order
+	})
+
+	// Iterate over sorted pairs
+	for _, pair := range pairs {
+		fmt.Printf("%s: %d\n", pair.Key, pair.Value)
+	}
+}
+```
+
+**Output** (sorted by value, ascending):
+```
+orange: 2
+banana: 3
+apple: 5
+```
+
+### Notes
+- **Key Types**: The `sort.Strings` function works for string keys. For other comparable types (e.g., `int`), use `sort.Ints` or `sort.Slice` with a custom comparison function.
+- **Custom Sorting**: Use `sort.Slice` for complex sorting logic (e.g., sorting by value first, then by key for ties).
+- **Performance**: Sorting has O(n log n) complexity, where n is the number of keys.
+- **Immutability**: The original map remains unchanged; sorting creates a new ordered representation.
+
+If you need a specific sorting criterion (e.g., descending order, complex types, or handling ties), let me know, and I can provide a tailored example!
+
